@@ -1,0 +1,19 @@
+{
+  "name": "List view extension",
+  "version": "0.0.0",
+  "authors": [
+    "Xavier Cambar <xcambar@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "aura": "~0.9.1"
+  },
+  "directory": "app/bower_components"
+}
