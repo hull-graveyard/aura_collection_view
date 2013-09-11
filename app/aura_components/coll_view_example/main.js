@@ -1,12 +1,14 @@
+/*global define:true */
 (function () {
+  "use strict";
 
   function collectionTemplate (renderItems) {
     return "<ul>" +renderItems() + "</ul>";
-  };
+  }
 
   function itemTemplate (item) {
     return "<li>" + item.value + "</li>";
-  };
+  }
 
 
 
