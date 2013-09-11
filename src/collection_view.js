@@ -40,6 +40,11 @@ define(['jquery', 'underscore'], function ($, _) {
     this._renderItem(item);
   };
 
+  CollectionView.prototype.prependItem = function (item) {
+    this.items.unshift(item);
+    this._renderItem(item, 0);
+  };
+
   CollectionView.prototype._renderItem = function (item, pos) {
     if (!this._$container) {
       return this.render();
