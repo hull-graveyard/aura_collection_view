@@ -50,6 +50,22 @@ define(['jquery', 'underscore'], function ($, _) {
     this._renderItem(item, pos);
   };
 
+  CollectionView.prototype.removeItem = function (item) {
+    var pos;
+    _.each(this.items, function (_item, _pos) {
+      if (item === _item) {
+        pos = _pos;
+      }
+      return false;
+    });
+    this.removeItemAt(pos);
+  };
+
+  CollectionView.prototype.removeItemAt = function (pos) {
+    this.items.splice(pos, 1);
+    this._$container.find("[data-collview-item=" + this._id + "]").get(pos).remove();
+  };
+
   CollectionView.prototype._renderItem = function (item, pos) {
     if (!this._$container) {
       return this.render();

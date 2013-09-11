@@ -23,7 +23,7 @@
       var coll = this.sandbox.CollectionView(data, {
         el: this.$el,
         template: collectionTemplate,
-          itemTemplate: itemTemplate
+        itemTemplate: itemTemplate
       });
       coll.render();
 
@@ -33,6 +33,16 @@
       setTimeout(function () {
         coll.prependItem({value: "Added too"});
       }, 2000);
+      setTimeout(function () {
+        coll.insertItemAt({value: "Added at pos"}, 3);
+      }, 2500);
+      setTimeout(function () {
+        coll.removeItem(data[1]);
+        coll.removeItem(data[1]);
+      }, 3000);
+      setTimeout(function () {
+        coll.removeItemAt(1);
+      }, 3500);
     }
   });
 
