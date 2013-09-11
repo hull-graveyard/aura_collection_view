@@ -45,6 +45,11 @@ define(['jquery', 'underscore'], function ($, _) {
     this._renderItem(item, 0);
   };
 
+  CollectionView.prototype.insertItemAt = function (item, pos) {
+    this.items.splice(pos, 0, item);
+    this._renderItem(item, pos);
+  };
+
   CollectionView.prototype._renderItem = function (item, pos) {
     if (!this._$container) {
       return this.render();
