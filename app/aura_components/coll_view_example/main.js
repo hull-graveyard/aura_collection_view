@@ -45,6 +45,9 @@
       setTimeout(function () {
         coll.removeItemAt(1);
       }, 3500);
+      setTimeout(function () {
+        coll.moveItem(data[2], 3);
+      }, 4500);
     }
   });
 

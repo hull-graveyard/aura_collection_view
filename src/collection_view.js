@@ -107,6 +107,16 @@ define(['jquery', 'underscore'], function ($, _) {
     this.removeItemAt(pos);
   };
 
+  CollectionView.prototype.moveItem = function (item, toPos) {
+    var fromPos = this.items.indexOf(item);
+    var itemArray = this.items.splice(fromPos, 1);
+    this.items.splice(toPos, 0, itemArray[0]);
+
+    var elementArray = this._itemsElements.splice(fromPos, 1);
+    this._insertInDom(elementArray[0], toPos);
+
+  };
+
   /*
    * Removes an item at a specific position
    * Removes its view
@@ -128,13 +138,17 @@ define(['jquery', 'underscore'], function ($, _) {
     }
     var item = this.items[pos];
     var _renderedItem = $(this.prepareItem(item));
+    this._insertInDom(_renderedItem, pos);
+  };
+
+  CollectionView.prototype._insertInDom = function (el, pos) {
     var renderedItems = this._itemsElements;
-    renderedItems.splice(pos, 0, _renderedItem);
+    renderedItems.splice(pos, 0, el);
 
     if (pos === 0) {
-      this._$container.prepend(_renderedItem);
+      this._$container.prepend(el);
     } else {
-      renderedItems[pos - 1].after(_renderedItem);
+      renderedItems[pos - 1].after(el);
     }
   };
 
