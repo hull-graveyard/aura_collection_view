@@ -112,9 +112,7 @@ define(['jquery', 'underscore'], function ($, _) {
     var itemArray = this.items.splice(fromPos, 1);
     this.items.splice(toPos, 0, itemArray[0]);
 
-    var elementArray = this._itemsElements.splice(fromPos, 1);
-    this._insertInDom(elementArray[0], toPos);
-
+    this._moveInDom(fromPos, toPos);
   };
 
   /*
@@ -150,6 +148,20 @@ define(['jquery', 'underscore'], function ($, _) {
     } else {
       renderedItems[pos - 1].after(el);
     }
+  };
+
+  CollectionView.prototype._moveInDom = function (from, to) {
+    var elementArray = this._itemsElements.splice(from, 1);
+    this._insertInDom(elementArray[0], to);
+  };
+
+  CollectionView.prototype.sort = function (method) {
+    var _newOrder = this.items.map(function(item) { return item; });
+    _newOrder.sort(method);
+    _.each(_newOrder, function (item, index) {
+      this.moveItem(item, index);
+    }, this);
+
   };
 
   return {
