@@ -17,7 +17,7 @@
       var random = Math.random().toString().substring(2).split('');
       console.log(random);
       return random.map(function (number) {
-        return { value: parseInt(number) };
+        return { value: parseInt(number, 10) };
       });
     },
     initialize: function () {
