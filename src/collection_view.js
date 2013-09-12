@@ -18,7 +18,6 @@ define(['jquery', 'underscore'], function ($, _) {
     var $marker = el.find("#" + id);
     var $container = $marker.parent();
     $marker.remove();
-    $container.attr('data-collview', id);
     return $container;
   }
 
@@ -32,7 +31,6 @@ define(['jquery', 'underscore'], function ($, _) {
     }
     this.items = options.items;
     this.options = options;
-    this._id = "coll_view_" + _.uniqueId();
   };
 
   /*
@@ -48,12 +46,16 @@ define(['jquery', 'underscore'], function ($, _) {
    */
   CollectionView.prototype.render = function () {
     this.reset();
-    var containerMarker = _generateMarker(this._id);
+    var _id = _.uniqueId('collview_');
+    var containerMarker = _generateMarker(_id);
     this.options.el.html(this.options.template(function () { return containerMarker; }));
-    this._$container = _markContainer(this.options.el, this._id);
+    this._$container = _markContainer(this.options.el, _id);
     _.each(this.items, function (item, index) {this._renderItemAt(index);}, this);
   };
 
+  /*
+   * Removes everything from the collection view and clears the view
+   */
   CollectionView.prototype.reset = function () {
     if (this._$container) {
       this._$container.remove();
@@ -107,6 +109,9 @@ define(['jquery', 'underscore'], function ($, _) {
     this.removeItemAt(pos);
   };
 
+  /*
+   * Moves an item to a specified position in the collection
+   */
   CollectionView.prototype.moveItem = function (item, toPos) {
     var fromPos = this.items.indexOf(item);
     var itemArray = this.items.splice(fromPos, 1);
@@ -139,6 +144,11 @@ define(['jquery', 'underscore'], function ($, _) {
     this._insertInDom(_renderedItem, pos);
   };
 
+  /*
+   * Inserts a rendered element corresponding to an item in the DOM
+   * at the required position.
+   * Should not be used directly
+   */
   CollectionView.prototype._insertInDom = function (el, pos) {
     var renderedItems = this._itemsElements;
     renderedItems.splice(pos, 0, el);
@@ -150,11 +160,18 @@ define(['jquery', 'underscore'], function ($, _) {
     }
   };
 
+  /*
+   * Moves a DOM element of the collection from a place to another
+   * Only affects the DOMi, should not be used directly
+   */
   CollectionView.prototype._moveInDom = function (from, to) {
     var elementArray = this._itemsElements.splice(from, 1);
     this._insertInDom(elementArray[0], to);
   };
 
+  /*
+   * Sorts the items and moves the rendered items accordingly
+   */
   CollectionView.prototype.sort = function (method) {
     var _newOrder = this.items.map(function(item) { return item; });
     _newOrder.sort(method);
