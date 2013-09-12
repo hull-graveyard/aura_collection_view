@@ -47,10 +47,23 @@ define(['jquery', 'underscore'], function ($, _) {
    * Renders the whole collection
    */
   CollectionView.prototype.render = function () {
+    this.reset();
     var containerMarker = _generateMarker(this._id);
     this.options.el.html(this.options.template(function () { return containerMarker; }));
     this._$container = _markContainer(this.options.el, this._id);
     _.each(this.items, function (item) {this._renderItem(item);}, this);
+  };
+
+  CollectionView.prototype.reset = function () {
+    if (this._$container) {
+      this._$container.remove();
+      this._$container = null;
+    }
+    var elements = this._itemsElements || [];
+    _.each(elements, function (elt) {
+      elt.remove();
+    });
+    this._itemsElements = [];
   };
 
   /*
@@ -112,20 +125,19 @@ define(['jquery', 'underscore'], function ($, _) {
     if (!this._$container) {
       return this.render();
     }
-    var _renderedItem = $(this.prepareItem(item)).attr('data-collview-item', this._id);
-    var renderedItems = this._$container.find("[data-collview-item=" + this._id + "]");
+    var _renderedItem = $(this.prepareItem(item));
+    var renderedItems = this._itemsElements;
 
-    var elementAtPos;
     if (pos === undefined) {
-      elementAtPos = renderedItems[renderedItems.length - 1];
-      if (elementAtPos) {
-        $(elementAtPos).after(_renderedItem);
-      } else {
-        this._$container.append(_renderedItem);
-      }
+      pos = Math.max(renderedItems.length, 0);
     } else {
-      elementAtPos = renderedItems[pos] || renderedItems[renderedItems.length - 1];
-      $(elementAtPos).before(_renderedItem);
+      pos = Math.max(0, Math.min(pos, renderedItems.length));
+    }
+    renderedItems.splice(pos, 0, _renderedItem);
+    if (pos === 0) {
+      this._$container.prepend(_renderedItem);
+    } else {
+      renderedItems[pos - 1].after(_renderedItem);
     }
   };
 

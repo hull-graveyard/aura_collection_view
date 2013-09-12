@@ -38,13 +38,13 @@
       setTimeout(function () {
         coll.insertItemAt({value: "Added at pos"}, 3);
       }, 2500);
-      setTimeout(function () {
-        coll.removeItem(data[1]);
-        coll.removeItem(data[1]);
-      }, 3000);
-      setTimeout(function () {
-        coll.removeItemAt(1);
-      }, 3500);
+      // setTimeout(function () {
+      //   coll.removeItem(data[1]);
+      //   coll.removeItem(data[1]);
+      // }, 3000);
+      // setTimeout(function () {
+      //   coll.removeItemAt(1);
+      // }, 3500);
     }
   });
 
