@@ -51,7 +51,7 @@ define(['jquery', 'underscore'], function ($, _) {
     var containerMarker = _generateMarker(this._id);
     this.options.el.html(this.options.template(function () { return containerMarker; }));
     this._$container = _markContainer(this.options.el, this._id);
-    _.each(this.items, function (item) {this._renderItem(item);}, this);
+    _.each(this.items, function (item, index) {this._renderItemAt(index);}, this);
   };
 
   CollectionView.prototype.reset = function () {
@@ -71,8 +71,7 @@ define(['jquery', 'underscore'], function ($, _) {
    * renders the item at the end of the view
    */
   CollectionView.prototype.appendItem = function (item) {
-    this.items.push(item);
-    this._renderItem(item);
+    this.insertItemAt(item, this.items.length);
   };
 
   /*
@@ -80,8 +79,7 @@ define(['jquery', 'underscore'], function ($, _) {
    * renders the item at the beginning of the view
    */
   CollectionView.prototype.prependItem = function (item) {
-    this.items.unshift(item);
-    this._renderItem(item, 0);
+    this.insertItemAt(item, 0);
   };
 
   /*
@@ -89,8 +87,9 @@ define(['jquery', 'underscore'], function ($, _) {
    * renders the item in the view at that position
    */
   CollectionView.prototype.insertItemAt = function (item, pos) {
+    pos = Math.max(0, Math.min(pos, this.items.length));
     this.items.splice(pos, 0, item);
-    this._renderItem(item, pos);
+    this._renderItemAt(pos);
   };
 
   /*
@@ -114,26 +113,24 @@ define(['jquery', 'underscore'], function ($, _) {
    */
   CollectionView.prototype.removeItemAt = function (pos) {
     this.items.splice(pos, 1);
-    this._$container.find("[data-collview-item=" + this._id + "]").get(pos).remove();
+    _.each(this._itemsElements.splice(pos, 1), function (item) {
+      item.remove();
+    });
   };
 
   /*
    * Generates the view for a specific item
    * Displays it at the correct position
    */
-  CollectionView.prototype._renderItem = function (item, pos) {
+  CollectionView.prototype._renderItemAt = function (pos) {
     if (!this._$container) {
       return this.render();
     }
+    var item = this.items[pos];
     var _renderedItem = $(this.prepareItem(item));
     var renderedItems = this._itemsElements;
-
-    if (pos === undefined) {
-      pos = Math.max(renderedItems.length, 0);
-    } else {
-      pos = Math.max(0, Math.min(pos, renderedItems.length));
-    }
     renderedItems.splice(pos, 0, _renderedItem);
+
     if (pos === 0) {
       this._$container.prepend(_renderedItem);
     } else {
